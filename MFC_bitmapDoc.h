@@ -5,6 +5,40 @@
 
 #pragma once
 
+#include <vector>
+using namespace std;
+
+
+
+class CDrawImg {
+public:
+
+	Image *m_image;
+	CPoint m_imgStartPt;
+	CPoint m_imgEndPt;
+
+
+public:
+	void imgLoad(CString const m_ImgPath) {
+		m_image = Image::FromFile(m_ImgPath);
+	}
+
+	void clear() {
+	}
+
+	void DrawAll(Graphics &g) const {
+
+
+
+		g.DrawImage(m_image,
+					m_imgStartPt.x, m_imgStartPt.y,
+					m_imgEndPt.x - m_imgStartPt.x, m_imgEndPt.y - m_imgStartPt.y);
+
+	}
+
+
+};
+
 
 class CMFCbitmapDoc : public CDocument
 {
@@ -15,8 +49,9 @@ protected: // serialization에서만 만들어집니다.
 // 특성입니다.
 public:
 	CString m_ImgPath;
-	CPoint m_imgStartPt;
-	CPoint m_imgEndPt;
+
+	CDrawImg m_Img;
+	vector<CDrawImg> m_Imgs;
 
 
 // 작업입니다.

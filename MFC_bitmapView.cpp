@@ -64,19 +64,18 @@ void CMFCbitmapView::OnDraw(CDC* pDC)
 
 
 	Graphics g(pDC->m_hDC);
-	Image image(pDoc->m_ImgPath);
 
+	for (const CDrawImg &img : pDoc->m_Imgs) {
+		img.DrawAll(g);
+	}
 
-	g.DrawImage(&image, pDoc->m_imgStartPt.x, pDoc->m_imgStartPt.y,
-		pDoc->m_imgEndPt.x-pDoc->m_imgStartPt.x, pDoc->m_imgEndPt.y- pDoc->m_imgStartPt.y);
+	//if (pDoc->m_Imgs.size() > 0)
+	//	pDoc->m_Imgs[0].DrawAll(g);
 
+	//Image *test_image;
+	//test_image = Image::FromFile(pDoc->m_ImgPath);
 
-	//image.RotateFlip(Rotate90FlipNone);
-
-
-	
-
-
+	//g.DrawImage(test_image, 0, 0);
 }
 
 
@@ -130,7 +129,8 @@ void CMFCbitmapView::OnLButtonDown(UINT nFlags, CPoint point)
 	CMFCbitmapDoc* pDoc = GetDocument();
 	SetCapture();
 
-	pDoc->m_imgStartPt = point;
+	pDoc->m_Img.imgLoad(pDoc->m_ImgPath);
+	pDoc->m_Img.m_imgStartPt = point;
 
 	CView::OnLButtonDown(nFlags, point);
 }
@@ -143,10 +143,12 @@ void CMFCbitmapView::OnLButtonUp(UINT nFlags, CPoint point)
 	CMFCbitmapDoc* pDoc = GetDocument();
 	ReleaseCapture();
 
+	pDoc->m_Img.m_imgEndPt = point;
+
+	pDoc->m_Imgs.push_back(pDoc->m_Img);
+
+
 	//pDoc->SetModifiedFlag();
-
-
-	pDoc->m_imgEndPt = point;
 
 	Invalidate(FALSE);
 
