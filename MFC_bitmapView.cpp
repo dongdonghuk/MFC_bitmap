@@ -27,6 +27,8 @@ BEGIN_MESSAGE_MAP(CMFCbitmapView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
 END_MESSAGE_MAP()
 
 // CMFCbitmapView 생성/소멸
@@ -65,15 +67,12 @@ void CMFCbitmapView::OnDraw(CDC* pDC)
 	Image image(pDoc->m_ImgPath);
 
 
-	int width = 100;
-	int height = 100;
+	g.DrawImage(&image, pDoc->m_imgStartPt.x, pDoc->m_imgStartPt.y,
+		pDoc->m_imgEndPt.x-pDoc->m_imgStartPt.x, pDoc->m_imgEndPt.y- pDoc->m_imgStartPt.y);
 
-	g.DrawImage(&image,10,10,200,200);
-	g.DrawImage(&image,210,10,200,200);
 
-	image.RotateFlip(Rotate90FlipNone);
+	//image.RotateFlip(Rotate90FlipNone);
 
-	g.DrawImage(&image,410,10,200,200);
 
 	
 
@@ -122,3 +121,35 @@ CMFCbitmapDoc* CMFCbitmapView::GetDocument() const // 디버그되지 않은 버
 
 
 // CMFCbitmapView 메시지 처리기
+
+
+void CMFCbitmapView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CMFCbitmapDoc* pDoc = GetDocument();
+	SetCapture();
+
+	pDoc->m_imgStartPt = point;
+
+	CView::OnLButtonDown(nFlags, point);
+}
+
+
+void CMFCbitmapView::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CMFCbitmapDoc* pDoc = GetDocument();
+	ReleaseCapture();
+
+	//pDoc->SetModifiedFlag();
+
+
+	pDoc->m_imgEndPt = point;
+
+	Invalidate(FALSE);
+
+
+	CView::OnLButtonUp(nFlags, point);
+}
