@@ -24,6 +24,15 @@ IMPLEMENT_DYNCREATE(CMFCbitmapDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CMFCbitmapDoc, CDocument)
 	ON_COMMAND(IDM_IMAGE_LOAD, &CMFCbitmapDoc::OnImageLoad)
+	ON_COMMAND(IDM_RECT, &CMFCbitmapDoc::OnRect)
+	ON_UPDATE_COMMAND_UI(IDM_RECT, &CMFCbitmapDoc::OnUpdateRect)
+	ON_COMMAND(IDM_COLOR_RED, &CMFCbitmapDoc::OnColorRed)
+	ON_COMMAND(IDM_COLOR_GREEN, &CMFCbitmapDoc::OnColorGreen)
+	ON_COMMAND(IDM_COLOR_BLUE, &CMFCbitmapDoc::OnColorBlue)
+	ON_COMMAND(IDM_CIRCLE, &CMFCbitmapDoc::OnCircle)
+	ON_COMMAND(IDM_THICK_1, &CMFCbitmapDoc::OnThick1)
+	ON_COMMAND(IDM_THICK_2, &CMFCbitmapDoc::OnThick2)
+	ON_COMMAND(IDM_THICK_3, &CMFCbitmapDoc::OnThick3)
 END_MESSAGE_MAP()
 
 
@@ -45,6 +54,12 @@ BOOL CMFCbitmapDoc::OnNewDocument()
 		return FALSE;
 
 	// TODO: 여기에 재초기화 코드를 추가합니다.
+	m_penColor = Color(255, 255, 0, 0);
+	m_penThick = 10;
+	m_figureType = 0;
+	m_drawMode = 1;
+	 
+	
 	// SDI 문서는 이 문서를 다시 사용합니다.
 
 	return TRUE;
@@ -142,10 +157,96 @@ void CMFCbitmapDoc::Dump(CDumpContext& dc) const
 void CMFCbitmapDoc::OnImageLoad()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_drawMode = 0;
+
 	TCHAR szFilter[] = _T("Image(*.png, *.gif, *.jpg)|*.png;*.gif;*.jpg|All Files(*.*)|*.*||");
 	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY, szFilter);
 	if (IDOK == dlg.DoModal()) {
 		m_ImgPath = dlg.GetPathName();
 		AfxMessageBox(m_ImgPath);
 	}
+}
+
+
+void CMFCbitmapDoc::DeleteContents()
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	m_Imgs.clear();
+	m_figures.clear();
+	
+
+	CDocument::DeleteContents();
+}
+
+
+void CMFCbitmapDoc::OnRect()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_drawMode = 1;
+	m_figureType = 0;
+
+
+}
+
+void CMFCbitmapDoc::OnCircle()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_drawMode = 1;
+	m_figureType = 1;
+
+}
+
+
+void CMFCbitmapDoc::OnUpdateRect(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+}
+
+
+void CMFCbitmapDoc::OnColorRed()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_penColor = Color(255, 255, 0, 0);
+
+}
+
+
+void CMFCbitmapDoc::OnColorGreen()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_penColor = Color(255, 0, 255, 0);
+
+}
+
+
+void CMFCbitmapDoc::OnColorBlue()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_penColor = Color(255, 0, 0, 255);
+
+}
+
+
+
+
+
+void CMFCbitmapDoc::OnThick1()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_penThick = 3;
+}
+
+
+void CMFCbitmapDoc::OnThick2()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_penThick = 10;
+}
+
+
+void CMFCbitmapDoc::OnThick3()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_penThick = 20;
+
 }

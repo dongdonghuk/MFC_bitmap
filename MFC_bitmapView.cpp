@@ -65,17 +65,22 @@ void CMFCbitmapView::OnDraw(CDC* pDC)
 
 	Graphics g(pDC->m_hDC);
 
-	for (const CDrawImg &img : pDoc->m_Imgs) {
-		img.DrawAll(g);
+	int i = 0, j = 0, k = 0;
+	for (const int sequence : pDoc->m_sequence) {
+
+		switch (sequence)
+		{
+		case 0:
+			(pDoc->m_Imgs)[i++].Draw(g);
+			break;
+		case 1:
+			(pDoc->m_figures)[j++].Draw(g);
+			break;
+		}
+
 	}
 
-	//if (pDoc->m_Imgs.size() > 0)
-	//	pDoc->m_Imgs[0].DrawAll(g);
 
-	//Image *test_image;
-	//test_image = Image::FromFile(pDoc->m_ImgPath);
-
-	//g.DrawImage(test_image, 0, 0);
 }
 
 
@@ -129,8 +134,20 @@ void CMFCbitmapView::OnLButtonDown(UINT nFlags, CPoint point)
 	CMFCbitmapDoc* pDoc = GetDocument();
 	SetCapture();
 
-	pDoc->m_Img.imgLoad(pDoc->m_ImgPath);
-	pDoc->m_Img.m_imgStartPt = point;
+
+	switch (pDoc->m_drawMode)
+	{
+	case 0:
+		pDoc->m_Img.imgLoad(pDoc->m_ImgPath);
+		pDoc->m_Img.m_imgStartPt = point;
+		break;
+	case 1:
+		pDoc->m_figure.m_imgStartPt = point;
+
+		break;
+	default:
+		break;
+	}
 
 	CView::OnLButtonDown(nFlags, point);
 }
@@ -143,10 +160,27 @@ void CMFCbitmapView::OnLButtonUp(UINT nFlags, CPoint point)
 	CMFCbitmapDoc* pDoc = GetDocument();
 	ReleaseCapture();
 
-	pDoc->m_Img.m_imgEndPt = point;
+	switch (pDoc->m_drawMode)
+	{
+	case 0:
+		pDoc->m_Img.m_imgEndPt = point;
+		pDoc->m_Imgs.push_back(pDoc->m_Img);
+		pDoc->m_sequence.push_back(0);
+		break;
+	case 1:
+		pDoc->m_figure.m_imgEndPt = point;
+		pDoc->m_figure.m_FrameColor = pDoc->m_penColor;
+		pDoc->m_figure.m_FrameTick = pDoc->m_penThick;
+		pDoc->m_figure.type = pDoc->m_figureType;
 
-	pDoc->m_Imgs.push_back(pDoc->m_Img);
+		pDoc->m_figures.push_back(pDoc->m_figure);
+		pDoc->m_sequence.push_back(1);
 
+
+		break;
+	default:
+		break;
+	}
 
 	//pDoc->SetModifiedFlag();
 
