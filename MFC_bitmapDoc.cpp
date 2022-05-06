@@ -33,6 +33,9 @@ BEGIN_MESSAGE_MAP(CMFCbitmapDoc, CDocument)
 	ON_COMMAND(IDM_THICK_1, &CMFCbitmapDoc::OnThick1)
 	ON_COMMAND(IDM_THICK_2, &CMFCbitmapDoc::OnThick2)
 	ON_COMMAND(IDM_THICK_3, &CMFCbitmapDoc::OnThick3)
+	ON_COMMAND(IDM_IMAGE_ROTATE, &CMFCbitmapDoc::OnImageRotate)
+	ON_COMMAND(IDM_IMAGE_ROTATE_2, &CMFCbitmapDoc::OnImageRotate2)
+	ON_COMMAND(IDM_IMAGE_FLIP, &CMFCbitmapDoc::OnImageFlip)
 END_MESSAGE_MAP()
 
 
@@ -173,6 +176,7 @@ void CMFCbitmapDoc::DeleteContents()
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	m_Imgs.clear();
 	m_figures.clear();
+	m_sequence.clear();
 	
 
 	CDocument::DeleteContents();
@@ -249,4 +253,34 @@ void CMFCbitmapDoc::OnThick3()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	m_penThick = 20;
 
+}
+
+
+void CMFCbitmapDoc::OnImageRotate()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	for (CDrawImg& img : m_Imgs) {
+		img.m_image->RotateFlip(Rotate90FlipNone);
+	}
+	UpdateAllViews(NULL);
+}
+
+
+void CMFCbitmapDoc::OnImageRotate2()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	for (CDrawImg& img : m_Imgs) {
+		img.m_image->RotateFlip(Rotate270FlipNone);
+	}
+	UpdateAllViews(NULL);
+}
+
+
+void CMFCbitmapDoc::OnImageFlip()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	for (CDrawImg& img : m_Imgs) {
+		img.m_image->RotateFlip(RotateNoneFlipX);
+	}
+	UpdateAllViews(NULL);
 }

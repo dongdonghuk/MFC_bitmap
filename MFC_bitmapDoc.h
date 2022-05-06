@@ -61,6 +61,7 @@ public:
 		g.DrawImage(m_image,
 					m_imgStartPt.x, m_imgStartPt.y,
 					m_imgEndPt.x - m_imgStartPt.x, m_imgEndPt.y - m_imgStartPt.y);
+
 	}
 
 
@@ -133,4 +134,7 @@ public:
 	afx_msg void OnThick1();
 	afx_msg void OnThick2();
 	afx_msg void OnThick3();
+	afx_msg void OnImageRotate();
+	afx_msg void OnImageRotate2();
+	afx_msg void OnImageFlip();
 };
