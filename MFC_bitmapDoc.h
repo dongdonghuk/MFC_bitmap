@@ -36,9 +36,7 @@ public:
 				m_imgEndPt.x - m_imgStartPt.x,
 				m_imgEndPt.y - m_imgStartPt.y);
 		}
-
 	}
-
 };
 
 class CDrawImg {
@@ -65,7 +63,58 @@ public:
 	}
 
 
+	void Frame(CDC* pDC, CPoint& point) {	//미완성 ㅠㅠ
+		CPen pen(PS_DOT, 1, RGB(0,0,0));
+		CPen* pOldPen = pDC->SelectObject(&pen);
+
+		pDC->Rectangle(m_imgStartPt.x,m_imgStartPt.y, point.x, point.y);
+
+		pDC->SelectObject(pOldPen);
+
+	}
+
 };
+
+class CDrawLine {
+public:
+
+	Color m_penColor;
+	int m_nWidth;
+	vector<CPoint> m_array;
+
+public:
+	void clear() {
+		m_array.clear();
+	}
+
+	void Draw(Graphics& g) const {
+		Pen pen(m_penColor, m_nWidth);
+
+		pen.SetStartCap(LineCapRound);
+		pen.SetEndCap(LineCapRound);
+
+		for (int i = 0; i < m_array.size() - 1; i++) {
+			g.DrawLine(&pen, m_array[i].x, m_array[i].y, m_array[i + 1].x, m_array[i+1].y);
+		}
+
+	}
+
+	void DrawLastLine(CDC* pDC, CPoint& point) {
+		CPen pen(PS_SOLID, m_nWidth, RGB(m_penColor.GetRed(), m_penColor.GetGreen(), m_penColor.GetBlue()));
+		CPen* pOldPen = pDC->SelectObject(&pen);
+
+		pDC->MoveTo(m_array[m_array.size() - 1]);
+		pDC->LineTo(point);
+
+		pDC->SelectObject(pOldPen);
+	}
+
+	void push_back(const CPoint& point) {
+		m_array.push_back(point);
+	}
+
+};
+
 
 
 class CMFCbitmapDoc : public CDocument
@@ -88,6 +137,9 @@ public:
 
 	CFigure m_figure;
 	vector<CFigure> m_figures;
+
+	CDrawLine m_line;
+	vector<CDrawLine> m_lines;
 
 	vector<int> m_sequence;
 
@@ -137,4 +189,5 @@ public:
 	afx_msg void OnImageRotate();
 	afx_msg void OnImageRotate2();
 	afx_msg void OnImageFlip();
+	afx_msg void OnLineDraw();
 };

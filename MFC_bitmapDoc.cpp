@@ -36,6 +36,7 @@ BEGIN_MESSAGE_MAP(CMFCbitmapDoc, CDocument)
 	ON_COMMAND(IDM_IMAGE_ROTATE, &CMFCbitmapDoc::OnImageRotate)
 	ON_COMMAND(IDM_IMAGE_ROTATE_2, &CMFCbitmapDoc::OnImageRotate2)
 	ON_COMMAND(IDM_IMAGE_FLIP, &CMFCbitmapDoc::OnImageFlip)
+	ON_COMMAND(IDM_LINE_DRAW, &CMFCbitmapDoc::OnLineDraw)
 END_MESSAGE_MAP()
 
 
@@ -75,9 +76,16 @@ BOOL CMFCbitmapDoc::OnNewDocument()
 
 void CMFCbitmapDoc::Serialize(CArchive& ar)
 {
+	int lines_size = m_lines.size();
+	int array_size;
+
+
+
 	if (ar.IsStoring())
 	{
 		// TODO: 여기에 저장 코드를 추가합니다.
+
+
 	}
 	else
 	{
@@ -177,6 +185,8 @@ void CMFCbitmapDoc::DeleteContents()
 	m_Imgs.clear();
 	m_figures.clear();
 	m_sequence.clear();
+	m_line.clear();
+	m_lines.clear();
 	
 
 	CDocument::DeleteContents();
@@ -283,4 +293,11 @@ void CMFCbitmapDoc::OnImageFlip()
 		img.m_image->RotateFlip(RotateNoneFlipX);
 	}
 	UpdateAllViews(NULL);
+}
+
+
+void CMFCbitmapDoc::OnLineDraw()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_drawMode = 2;
 }

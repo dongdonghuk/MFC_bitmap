@@ -29,6 +29,7 @@ BEGIN_MESSAGE_MAP(CMFCbitmapView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 // CMFCbitmapView 생성/소멸
@@ -65,6 +66,9 @@ void CMFCbitmapView::OnDraw(CDC* pDC)
 
 	Graphics g(pDC->m_hDC);
 
+	//g.SetSmoothingMode(SmoothingModeHighQuality);
+
+
 	int i = 0, j = 0, k = 0;
 	for (const int sequence : pDoc->m_sequence) {
 
@@ -75,6 +79,10 @@ void CMFCbitmapView::OnDraw(CDC* pDC)
 			break;
 		case 1:
 			(pDoc->m_figures)[j++].Draw(g);
+			break;
+
+		case 2:
+			(pDoc->m_lines)[k++].Draw(g);
 			break;
 		}
 
@@ -143,7 +151,12 @@ void CMFCbitmapView::OnLButtonDown(UINT nFlags, CPoint point)
 		break;
 	case 1:
 		pDoc->m_figure.m_imgStartPt = point;
-
+		break;
+	case 2:
+		pDoc->m_line.clear();
+		pDoc->m_line.m_penColor = pDoc->m_penColor;
+		pDoc->m_line.m_nWidth = pDoc->m_penThick;
+		pDoc->m_line.push_back(point);
 		break;
 	default:
 		break;
@@ -176,8 +189,14 @@ void CMFCbitmapView::OnLButtonUp(UINT nFlags, CPoint point)
 		pDoc->m_figures.push_back(pDoc->m_figure);
 		pDoc->m_sequence.push_back(1);
 
+		break;
+
+	case 2:
+		pDoc->m_lines.push_back(pDoc->m_line);
+		pDoc->m_sequence.push_back(2);
 
 		break;
+
 	default:
 		break;
 	}
@@ -188,4 +207,36 @@ void CMFCbitmapView::OnLButtonUp(UINT nFlags, CPoint point)
 
 
 	CView::OnLButtonUp(nFlags, point);
+}
+
+
+void CMFCbitmapView::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CMFCbitmapDoc* pDoc = GetDocument();
+	CClientDC dc(this);
+
+	switch (pDoc->m_drawMode)
+	{
+	case 0:
+
+		if ((nFlags & MK_LBUTTON) == MK_LBUTTON) {
+
+			pDoc->m_Img.Frame(&dc, point);
+		}
+		break;
+
+	case 2:
+		if ((nFlags & MK_LBUTTON) == MK_LBUTTON) {
+
+			pDoc->m_line.DrawLastLine(&dc, point);
+
+			pDoc->m_line.push_back(point);
+		}
+		break;
+	}
+
+
+	CView::OnMouseMove(nFlags, point);
 }
