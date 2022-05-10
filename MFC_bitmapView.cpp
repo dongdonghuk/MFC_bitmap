@@ -220,8 +220,9 @@ void CMFCbitmapView::OnMouseMove(UINT nFlags, CPoint point)
 	switch (pDoc->m_drawMode)
 	{
 	case 0:
-
 		if ((nFlags & MK_LBUTTON) == MK_LBUTTON) {
+			CRect rect(pDoc->m_Img.m_imgStartPt, point + CPoint(2, 2));
+			InvalidateRect(rect);
 
 			pDoc->m_Img.Frame(&dc, point);
 		}

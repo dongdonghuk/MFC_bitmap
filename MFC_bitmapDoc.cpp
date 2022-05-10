@@ -270,7 +270,14 @@ void CMFCbitmapDoc::OnImageRotate()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	for (CDrawImg& img : m_Imgs) {
+		int tmp;
+
+		tmp = img.m_imgEndPt.x - img.m_imgStartPt.x;
+		img.m_imgEndPt.x = img.m_imgEndPt.y;
+		img.m_imgEndPt.y = tmp;
+
 		img.m_image->RotateFlip(Rotate90FlipNone);
+
 	}
 	UpdateAllViews(NULL);
 }
@@ -280,7 +287,16 @@ void CMFCbitmapDoc::OnImageRotate2()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	for (CDrawImg& img : m_Imgs) {
+
+		int tmp;
+
+		tmp = img.m_imgEndPt.x;
+		img.m_imgEndPt.x = img.m_imgEndPt.y;
+		img.m_imgEndPt.y = tmp;
+
 		img.m_image->RotateFlip(Rotate270FlipNone);
+
+
 	}
 	UpdateAllViews(NULL);
 }

@@ -20,6 +20,8 @@ public:
 	CPoint m_imgStartPt;
 	CPoint m_imgEndPt;
 
+
+
 public:
 
 	void Draw(Graphics& g) const {
